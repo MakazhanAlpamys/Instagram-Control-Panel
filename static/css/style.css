@@ -1,0 +1,228 @@
+/* Общие стили */
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Стили для логов */
+.log-container {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 13px;
+    height: 400px;
+    overflow-y: auto;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.log-container-dashboard {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 13px;
+    height: calc(100vh - 200px);
+    overflow-y: auto;
+    padding: 15px;
+}
+
+.log-entry {
+    margin-bottom: 8px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    word-wrap: break-word;
+}
+
+/* Цветовая схема логов */
+.log-entry.success {
+    background-color: rgba(76, 175, 80, 0.1);
+    border-left: 3px solid #4caf50;
+}
+
+.log-entry.error {
+    background-color: rgba(244, 67, 54, 0.1);
+    border-left: 3px solid #f44336;
+}
+
+.log-entry.warning {
+    background-color: rgba(255, 152, 0, 0.1);
+    border-left: 3px solid #ff9800;
+}
+
+.log-entry.info {
+    background-color: rgba(33, 150, 243, 0.1);
+    border-left: 3px solid #2196f3;
+}
+
+/* Скроллбар для логов */
+.log-container::-webkit-scrollbar,
+.log-container-dashboard::-webkit-scrollbar {
+    width: 10px;
+}
+
+.log-container::-webkit-scrollbar-track,
+.log-container-dashboard::-webkit-scrollbar-track {
+    background: #2e2e2e;
+}
+
+.log-container::-webkit-scrollbar-thumb,
+.log-container-dashboard::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 5px;
+}
+
+.log-container::-webkit-scrollbar-thumb:hover,
+.log-container-dashboard::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.log-entry {
+    animation: fadeIn 0.3s ease-in;
+}
+
+/* Стили для статуса аккаунтов */
+.account-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 8px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.account-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.account-item.logged-in {
+    border-left: 4px solid #28a745;
+}
+
+.account-item.logged-out {
+    border-left: 4px solid #dc3545;
+}
+
+.account-username {
+    font-weight: 600;
+    flex-grow: 1;
+}
+
+.account-status {
+    font-size: 20px;
+}
+
+/* Стили для секций действий */
+.action-section {
+    transition: all 0.3s ease;
+}
+
+.action-section:hover {
+    transform: scale(1.02);
+}
+
+/* Улучшенные карточки */
+.card {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.card-header {
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+}
+
+/* Кнопки */
+.btn {
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Пульсация для активных процессов */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.processing {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .log-container-dashboard {
+        height: 400px;
+    }
+}
+
+/* Индикатор загрузки */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Стили для успешных/ошибочных алертов */
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+
+/* Эффект стеклянной карточки */
+.card {
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
+/* Navbar стиль */
+.navbar {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Плавный скролл */
+html {
+    scroll-behavior: smooth;
+}
