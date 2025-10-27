@@ -7,7 +7,12 @@ from instagram_manager import InstagramManager
 import json
 import queue
 import time
+import os
 from threading import Thread
+from dotenv import load_dotenv
+
+# Загрузка переменных из .env файла
+load_dotenv()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-here-change-in-production'
@@ -26,6 +31,17 @@ def initialize_manager():
     global instagram_manager, is_initialized
     
     instagram_manager = InstagramManager(log_callback=log_callback)
+    
+    # Автоматическая настройка Gemini AI из .env (если ключ указан)
+    gemini_key = os.getenv('GEMINI_API_KEY')
+    if gemini_key and gemini_key.strip():
+        log_callback("[SYSTEM] [INIT] [INFO] Обнаружен Gemini API ключ в .env, настройка AI...")
+        if instagram_manager.setup_gemini(gemini_key.strip()):
+            log_callback("[SYSTEM] [INIT] [SUCCESS] ✅ Gemini AI автоматически настроен из .env")
+        else:
+            log_callback("[SYSTEM] [INIT] [WARNING] ⚠️ Не удалось настроить Gemini AI из .env")
+    else:
+        log_callback("[SYSTEM] [INIT] [INFO] Gemini API ключ не найден в .env (AI-комментарии недоступны)")
     
     # Загрузка аккаунтов
     if not instagram_manager.load_accounts():
@@ -229,9 +245,40 @@ def api_unlike():
         'message': f'Удаление лайка запущено. Следите за логами.'
     })
 
+@app.route('/api/gemini/setup', methods=['POST'])
+def api_gemini_setup():
+    """API: Настройка Gemini AI для генерации уникальных комментариев"""
+    if not is_initialized:
+        return jsonify({
+            'success': False,
+            'message': 'Система не инициализирована'
+        })
+    
+    data = request.get_json()
+    api_key = data.get('api_key', '').strip()
+    
+    if not api_key:
+        return jsonify({
+            'success': False,
+            'message': 'API ключ не указан'
+        })
+    
+    success = instagram_manager.setup_gemini(api_key)
+    
+    if success:
+        return jsonify({
+            'success': True,
+            'message': 'Gemini AI успешно настроен! Теперь доступно AI-комментирование.'
+        })
+    else:
+        return jsonify({
+            'success': False,
+            'message': 'Ошибка настройки Gemini AI. Проверьте API ключ.'
+        })
+
 @app.route('/api/comment', methods=['POST'])
 def api_comment():
-    """API: Комментарий к посту"""
+    """API: Комментарий к посту (обычный - одинаковый текст)"""
     if not is_initialized:
         return jsonify({
             'success': False,
@@ -264,6 +311,43 @@ def api_comment():
     return jsonify({
         'success': True,
         'message': f'Комментирование запущено. Следите за логами.'
+    })
+
+@app.route('/api/comment-ai', methods=['POST'])
+def api_comment_ai():
+    """API: AI-комментирование (уникальный текст для каждого аккаунта через Gemini)"""
+    if not is_initialized:
+        return jsonify({
+            'success': False,
+            'message': 'Система не инициализирована'
+        })
+    
+    data = request.get_json()
+    url = data.get('url', '').strip()
+    comment = data.get('comment', '').strip()
+    
+    if not url:
+        return jsonify({
+            'success': False,
+            'message': 'URL поста не указан'
+        })
+    
+    if not comment:
+        return jsonify({
+            'success': False,
+            'message': 'Текст комментария не указан'
+        })
+    
+    def comment_ai_thread():
+        instagram_manager.comment_media_unique(url, comment)
+    
+    thread = Thread(target=comment_ai_thread)
+    thread.daemon = True
+    thread.start()
+    
+    return jsonify({
+        'success': True,
+        'message': f'🤖 AI-комментирование запущено! Gemini генерирует уникальные варианты...'
     })
 
 @app.route('/api/save', methods=['POST'])
@@ -349,7 +433,7 @@ if __name__ == '__main__':
     print("Instagram Control Panel")
     print("=" * 60)
     print("Запуск веб-сервера...")
-    print("Откройте браузер и перейдите по адресу: http://localhost:5000")
+    print("Откройте браузер и перейдите по адресу: http://localhost:5050")
     print("=" * 60)
     
-    app.run(debug=True, host='0.0.0.0', port=5000, threaded=True)
+    app.run(debug=True, host='0.0.0.0', port=5050, threaded=True)

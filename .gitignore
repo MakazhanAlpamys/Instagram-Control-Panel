@@ -5,6 +5,10 @@ account.json
 logs/
 *.log
 
+# Сессии Instagram (содержат токены доступа)
+sessions/
+*_session.json
+
 # Python
 __pycache__/
 *.py[cod]

@@ -94,12 +94,16 @@
                             </h6>
                             <div class="mb-2">
                                 <input type="text" id="commentUrl" class="form-control mb-2" placeholder="URL поста Instagram">
-                                <textarea id="commentText" class="form-control" rows="2" placeholder="Текст комментария"></textarea>
+                                <textarea id="commentText" class="form-control" rows="2" placeholder="Текст комментария (базовый для AI)"></textarea>
                             </div>
-                            <div class="d-grid">
-                                <button class="btn btn-info btn-sm" onclick="commentPost()">Оставить комментарий</button>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-info btn-sm" onclick="commentPost()">📝 Обычный комментарий</button>
+                                <button class="btn btn-gradient btn-sm" onclick="commentPostAI()">🤖 AI-Комментарий (уникальные)</button>
                             </div>
+                            <small class="text-muted">💡 AI создаст уникальный текст для каждого аккаунта</small>
                         </div>
+
+                        <hr>
 
                         <!-- Сохранение постов -->
                         <div class="action-section mb-4">

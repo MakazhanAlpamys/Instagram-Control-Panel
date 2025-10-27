@@ -169,7 +169,7 @@ async function unlikePost() {
     await apiRequest('/api/unlike', { url });
 }
 
-// Комментарий
+// Обычный комментарий (одинаковый текст)
 async function commentPost() {
     const url = document.getElementById('commentUrl').value.trim();
     const comment = document.getElementById('commentText').value.trim();
@@ -185,6 +185,24 @@ async function commentPost() {
     }
     
     await apiRequest('/api/comment', { url, comment });
+}
+
+// AI-комментарий (уникальный текст для каждого аккаунта)
+async function commentPostAI() {
+    const url = document.getElementById('commentUrl').value.trim();
+    const comment = document.getElementById('commentText').value.trim();
+    
+    if (!url) {
+        showToast('Введите URL поста', 'warning');
+        return;
+    }
+    
+    if (!comment) {
+        showToast('Введите базовый текст комментария', 'warning');
+        return;
+    }
+    
+    await apiRequest('/api/comment-ai', { url, comment });
 }
 
 // Сохранение поста
