@@ -69,7 +69,7 @@ python -m venv venv
 venv\Scripts\activate
 
 # Установите зависимости
-venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
 ### Шаг 2: Создание файла account.json
